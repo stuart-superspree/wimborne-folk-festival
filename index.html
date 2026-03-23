@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Festival Companion · Wimborne Folk Festival 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --plum: #4A1942;
+    --plum-dark: #2E0F28;
+    --plum-mid: #6B2760;
+    --berry: #8B3A7A;
+    --rose: #C4648A;
+    --cream: #F5EFE0;
+    --warm-white: #FBF8F2;
+    --forest: #2D5A27;
+    --forest-light: #4A7A42;
+    --brass: #C9952A;
+    --brass-light: #E8B84B;
+    --gold: #F0C842;
+    --slate: #3D3540;
+    --muted: #7A6E7E;
+    --card-bg: #ffffff;
+    --text-primary: #1E1520;
+    --text-secondary: #5C4E60;
+
+    --cat-music: #C4648A;
+    --cat-dance: #4A7A42;
+    --cat-session: #C9952A;
+    --cat-family: #5B7EC9;
+    --cat-food: #C97040;
+    --cat-concert: #6B2760;
+    --cat-procession: #8B3A7A;
+
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 20px rgba(74,25,66,0.12);
+    --shadow-sm: 0 2px 8px rgba(74,25,66,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* ---- SPLASH SCREEN ---- */
+  #splash {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--plum-dark);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 0.6s ease;
+  }
+  #splash.hide { opacity: 0; pointer-events: none; }
+
+  /* splash logo now uses img tag directly */
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 40px rgba(201,149,42,0.3); }
+    50% { box-shadow: 0 0 80px rgba(201,149,42,0.6); }
+  }
+
+  .splash-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--cream);
+    font-size: 28px; font-weight: 900;
+    text-align: center; letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .splash-sub {
+    color: var(--brass-light);
+    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+  .splash-date {
+    color: rgba(245,239,224,0.6);
+    font-size: 14px; margin-bottom: 32px;
+    text-align: center;
+  }
+  .splash-date strong { color: var(--cream); }
+
+  .countdown-strip {
+    display: flex; gap: 16px; margin-bottom: 48px;
+  }
+  .countdown-unit {
+    text-align: center;
+  }
+  .countdown-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 700;
+    color: var(--brass-light);
+    line-height: 1;
+  }
+  .countdown-label {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(245,239,224,0.5); margin-top: 4px;
+  }
+  .countdown-sep {
+    font-size: 28px; color: rgba(245,239,224,0.3);
+    align-self: flex-start; padding-top: 4px;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .splash-btn {
+    background: var(--brass);
+    color: var(--plum-dark);
+    border: none; border-radius: 50px;
+    padding: 16px 36px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; letter-spacing: 0.3px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(201,149,42,0.4);
+  }
+  .splash-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(201,149,42,0.5); }
+
+  /* ---- APP SHELL ---- */
+  #app { display: none; flex-direction: column; min-height: 100vh; }
+  #app.visible { display: flex; }
+
+  /* ---- TOP HEADER ---- */
+  .app-header {
+    background: var(--plum-dark);
+    padding: 16px 20px 12px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header-logo {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .header-logo-mark {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .header-logo-mark svg { width: 24px; height: 24px; }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; font-weight: 700;
+    color: var(--cream); line-height: 1.1;
+  }
+  .header-sub { font-size: 10px; color: var(--brass-light); letter-spacing: 1px; text-transform: uppercase; }
+
+  .header-live {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(201,149,42,0.15);
+    border: 1px solid rgba(201,149,42,0.3);
+    border-radius: 20px;
+    padding: 4px 10px;
+  }
+  .live-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--brass-light);
+    animation: blink 1.5s ease infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .live-text { font-size: 10px; font-weight: 600; color: var(--brass-light); letter-spacing: 0.8px; text-transform: uppercase; }
+
+  /* ---- CONTENT AREA ---- */
+  .content-area {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 80px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ---- BOTTOM NAV ---- */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 430px;
+    background: var(--plum-dark);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    padding: 8px 0 env(safe-area-inset-bottom, 8px);
+    z-index: 200;
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 3px; padding: 6px 4px;
+    cursor: pointer; transition: all 0.2s;
+    border: none; background: none;
+    color: rgba(245,239,224,0.4);
+  }
+  .nav-item.active { color: var(--brass-light); }
+  .nav-item svg { width: 22px; height: 22px; }
+  .nav-label { font-size: 9px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* ---- SCREEN (hidden by default) ---- */
+  .screen { display: none; animation: fadeIn 0.25s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ---- HERO SECTION ---- */
+  .hero-section {
+    background: linear-gradient(160deg, var(--plum-dark) 0%, var(--plum) 50%, var(--berry) 100%);
+    padding: 24px 20px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='1'/%3E%3Ccircle cx='50' cy='50' r='25' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='1'/%3E%3C/svg%3E") repeat;
+    opacity: 0.5;
+  }
+  .hero-greeting {
+    color: var(--brass-light);
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 6px;
+    position: relative;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 900;
+    color: var(--cream);
+    line-height: 1.15;
+    position: relative; margin-bottom: 4px;
+  }
+  .hero-day {
+    color: rgba(245,239,224,0.6);
+    font-size: 13px;
+    position: relative; margin-bottom: 20px;
+  }
+
+  .hero-pills {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    position: relative;
+  }
+  .hero-pill {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px; font-weight: 500;
+    color: var(--cream);
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .hero-pill:hover, .hero-pill.active {
+    background: var(--brass);
+    border-color: var(--brass);
+    color: var(--plum-dark);
+  }
+
+  /* ---- SECTION HEADERS ---- */
+  .section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 20px 12px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--text-primary);
+  }
+  .section-link {
+    font-size: 12px; font-weight: 500;
+    color: var(--plum);
+    text-decoration: none; cursor: pointer;
+  }
+
+  /* ---- EVENT CARDS ---- */
+  .events-list { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+
+  .event-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    border: 1px solid rgba(74,25,66,0.06);
+  }
+  .event-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+  .event-card-stripe {
+    width: 4px; flex-shrink: 0;
+    border-radius: 4px 0 0 4px;
+  }
+
+  .event-card-body { padding: 14px 14px 14px 16px; flex: 1; min-width: 0; }
+  .event-card-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 8px; margin-bottom: 6px;
+  }
+  .event-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; font-weight: 700;
+    color: var(--text-primary); line-height: 1.2;
+  }
+  .event-badge {
+    flex-shrink: 0;
+    border-radius: 12px;
+    padding: 3px 8px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    background: var(--cream);
+    color: var(--plum);
+  }
+  .event-badge.ticketed { background: #FFF3CD; color: #856404; }
+  .event-badge.free { background: #D1FAE5; color: #065F46; }
+  .event-badge.live-now { background: #FEE2E2; color: #991B1B; animation: blink 2s ease infinite; }
+
+  .event-meta {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; color: var(--text-secondary);
+  }
+  .event-meta span { display: flex; align-items: center; gap: 4px; }
+  .event-meta svg { width: 12px; height: 12px; }
+
+  .event-tag {
+    display: inline-flex; align-items: center;
+    background: var(--cream);
+    border-radius: 8px; padding: 2px 8px;
+    font-size: 10px; font-weight: 600;
+    margin-top: 6px;
+  }
+
+  /* ---- SCROLL CARDS (horizontal) ---- */
+  .scroll-cards {
+    display: flex; gap: 12px;
+    padding: 0 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 4px;
+  }
+  .scroll-cards::-webkit-scrollbar { display: none; }
+
+  .scroll-card {
+    flex-shrink: 0;
+    width: 160px;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid rgba(74,25,66,0.06);
+  }
+  .scroll-card:hover { transform: translateY(-2px); }
+
+  .scroll-card-img {
+    height: 100px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+  }
+  .scroll-card-body { padding: 10px 12px; }
+  .scroll-card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px; font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2; margin-bottom: 4px;
+  }
+  .scroll-card-sub { font-size: 11px; color: var(--muted); }
+
+  /* ---- NOW RIBBON ---- */
+  .now-ribbon {
+    background: linear-gradient(90deg, #991B1B, #C4648A);
+    padding: 10px 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ribbon-dot { width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: blink 1s ease infinite; }
+  .ribbon-text { font-size: 12px; font-weight: 600; color: #fff; }
+
+  /* ---- ALERT BANNER ---- */
+  .alert-banner {
+    margin: 0 20px 0;
+    background: #FFF8E8;
+    border: 1px solid var(--brass-light);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .alert-icon { font-size: 16px; flex-shrink: 0; }
+  .alert-text { font-size: 12px; color: #6B4400; line-height: 1.5; }
+  .alert-text strong { display: block; margin-bottom: 2px; }
+
+  /* ---- CATEGORY GRID ---- */
+  .cat-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 10px; padding: 0 20px;
+  }
+
+  .cat-card {
+    border-radius: var(--radius);
+    padding: 18px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; flex-direction: column;
+    min-height: 90px;
+    position: relative; overflow: hidden;
+  }
+  .cat-card:hover { transform: scale(1.02); }
+  .cat-card::after {
+    content: '';
+    position: absolute; bottom: -10px; right: -10px;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+  }
+  .cat-icon { font-size: 26px; margin-bottom: 6px; }
+  .cat-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; font-weight: 700;
+    color: #fff; line-height: 1.1;
+  }
+  .cat-count { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+
+  /* ---- MAP SCREEN ---- */
+  .map-screen {
+    background: #E8E0D4;
+    min-height: calc(100vh - 120px);
+    position: relative;
+  }
+  .map-placeholder {
+    width: 100%;
+    height: 340px;
+    background: linear-gradient(135deg, #C8D5B9 0%, #8FAF6E 30%, #6B9E50 50%, #A8C070 70%, #C8D5B9 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .map-placeholder::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 30px, rgba(0,0,0,0.03) 30px, rgba(0,0,0,0.03) 31px
+    ),
+    repeating-linear-gradient(
+      90deg, transparent, transparent 30px, rgba(0,0,0,0.03) 30px, rgba(0,0,0,0.03) 31px
+    );
+  }
+
+  /* Simplified Wimborne town illustration */
+  .map-road-h {
+    position: absolute;
+    height: 12px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 2px;
+  }
+  .map-road-v {
+    position: absolute;
+    width: 12px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 2px;
+  }
+  .map-building {
+    position: absolute;
+    background: rgba(180,160,130,0.7);
+    border-radius: 3px;
+  }
+  .map-pin {
+    position: absolute;
+    width: 28px; height: 34px;
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer;
+    transform: translate(-50%, -100%);
+    transition: transform 0.2s;
+  }
+  .map-pin:hover { transform: translate(-50%, -100%) scale(1.2); }
+  .map-pin-circle {
+    width: 28px; height: 28px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .map-pin-inner { transform: rotate(45deg); font-size: 13px; }
+  .map-pin-tail { width: 2px; height: 6px; background: rgba(0,0,0,0.3); }
+
+  .map-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.3));
+    height: 80px;
+  }
+  .map-label {
+    position: absolute; top: 12px; left: 12px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 8px; padding: 6px 10px;
+    font-size: 11px; font-weight: 600;
+    color: var(--plum-dark);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .map-controls {
+    position: absolute; right: 12px; top: 12px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .map-ctrl-btn {
+    width: 36px; height: 36px;
+    background: white; border: none;
+    border-radius: 8px; cursor: pointer;
+    font-size: 18px; font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .venue-list { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+  .venue-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 14px 16px;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 12px;
+    border: 1px solid rgba(74,25,66,0.06);
+  }
+  .venue-card:hover { transform: translateX(3px); }
+  .venue-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .venue-info { flex: 1; min-width: 0; }
+  .venue-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px; font-weight: 700;
+    color: var(--text-primary); margin-bottom: 2px;
+  }
+  .venue-detail { font-size: 11px; color: var(--muted); }
+  .venue-arrow { color: var(--muted); font-size: 16px; }
+
+  /* ---- SCHEDULE SCREEN ---- */
+  .day-tabs {
+    display: flex; background: var(--plum-dark);
+    padding: 0 20px;
+  }
+  .day-tab {
+    flex: 1; padding: 12px 8px; text-align: center;
+    color: rgba(245,239,224,0.5);
+    font-size: 12px; font-weight: 500;
+    cursor: pointer; border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .day-tab.active {
+    color: var(--brass-light);
+    border-bottom-color: var(--brass-light);
+  }
+  .day-tab-date { font-size: 18px; font-weight: 700; font-family: 'Playfair Display', serif; display: block; }
+
+  .filter-row {
+    padding: 12px 20px;
+    display: flex; gap: 8px; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter-chip {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px; font-weight: 500;
+    background: var(--cream);
+    color: var(--text-secondary);
+    cursor: pointer; border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+  .filter-chip.active {
+    background: var(--plum);
+    color: var(--cream);
+  }
+
+  .time-block { margin-bottom: 4px; }
+  .time-label {
+    padding: 8px 20px 4px;
+    font-size: 11px; font-weight: 600;
+    color: var(--muted); letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* ---- MY FESTIVAL SCREEN ---- */
+  .my-header {
+    background: linear-gradient(135deg, var(--plum-dark), var(--plum));
+    padding: 24px 20px 28px;
+  }
+  .my-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 900;
+    color: var(--cream); margin-bottom: 4px;
+  }
+  .my-sub { font-size: 13px; color: rgba(245,239,224,0.6); }
+  .my-stats {
+    display: flex; gap: 20px; margin-top: 16px;
+  }
+  .my-stat {
+    text-align: center;
+  }
+  .my-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700;
+    color: var(--brass-light);
+  }
+  .my-stat-label { font-size: 10px; color: rgba(245,239,224,0.5); text-transform: uppercase; letter-spacing: 1px; }
+
+  .saved-event {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 14px 16px;
+    display: flex; gap: 12px; align-items: flex-start;
+    border: 1px solid rgba(74,25,66,0.06);
+    cursor: pointer;
+  }
+  .saved-time {
+    text-align: center; min-width: 44px; flex-shrink: 0;
+  }
+  .saved-time-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700;
+    color: var(--plum);
+    line-height: 1;
+  }
+  .saved-time-label { font-size: 9px; color: var(--muted); text-transform: uppercase; }
+  .saved-info { flex: 1; }
+  .saved-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px; font-weight: 700;
+    color: var(--text-primary); margin-bottom: 3px;
+  }
+  .saved-detail { font-size: 12px; color: var(--muted); }
+
+  .heart-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%; border: none;
+    background: var(--cream);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .heart-btn.saved { background: #FEE2E2; }
+  .heart-btn:hover { transform: scale(1.15); }
+
+  /* ---- INFO SCREEN ---- */
+  .info-section { padding: 0 20px; margin-bottom: 16px; }
+  .info-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: 1px solid rgba(74,25,66,0.06);
+  }
+  .info-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 16px;
+    border-bottom: 1px solid rgba(74,25,66,0.05);
+    cursor: pointer; transition: background 0.15s;
+  }
+  .info-item:last-child { border-bottom: none; }
+  .info-item:hover { background: var(--cream); }
+  .info-item-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .info-item-text { flex: 1; }
+  .info-item-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 1px; }
+  .info-item-sub { font-size: 11px; color: var(--muted); }
+  .info-item-arrow { color: var(--muted); font-size: 14px; }
+
+  /* ---- DONATE SECTION ---- */
+  .donate-card {
+    margin: 0 20px;
+    background: linear-gradient(135deg, var(--plum-dark), var(--plum));
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .donate-card::before {
+    content: '♫';
+    position: absolute; font-size: 120px;
+    top: -20px; right: -10px;
+    color: rgba(255,255,255,0.04);
+    font-family: serif;
+  }
+  .donate-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--cream); margin-bottom: 6px;
+  }
+  .donate-sub { font-size: 12px; color: rgba(245,239,224,0.6); margin-bottom: 16px; line-height: 1.5; }
+  .donate-btn {
+    background: var(--brass);
+    color: var(--plum-dark);
+    border: none; border-radius: 50px;
+    padding: 12px 28px;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .donate-btn:hover { transform: scale(1.03); }
+
+  /* ---- EVENT DETAIL MODAL ---- */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(30,21,32,0.7);
+    backdrop-filter: blur(4px);
+    display: none; align-items: flex-end;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal-sheet {
+    background: var(--warm-white);
+    border-radius: 24px 24px 0 0;
+    width: 100%; max-height: 85vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+  @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+
+  .modal-handle {
+    width: 40px; height: 4px; border-radius: 2px;
+    background: rgba(74,25,66,0.2);
+    margin: 12px auto;
+  }
+  .modal-img {
+    height: 180px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 60px; position: relative;
+  }
+  .modal-cat-bar {
+    height: 4px; width: 100%;
+  }
+  .modal-body { padding: 20px; }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 900;
+    color: var(--text-primary); margin-bottom: 4px;
+  }
+  .modal-artist { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+  .modal-meta-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 20px;
+  }
+  .modal-meta-item {
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+  }
+  .modal-meta-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+  .modal-meta-val { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .modal-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; }
+  .modal-actions { display: flex; gap: 10px; }
+  .modal-btn {
+    flex: 1; padding: 14px;
+    border-radius: 50px; border: none;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .modal-btn-primary { background: var(--plum); color: var(--cream); }
+  .modal-btn-secondary { background: var(--cream); color: var(--plum); border: 1px solid rgba(74,25,66,0.15); }
+  .modal-btn:hover { transform: translateY(-1px); }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px;
+    background: rgba(255,255,255,0.8);
+    border: none; border-radius: 50%;
+    font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ---- PROCESSION BANNER ---- */
+  .procession-card {
+    margin: 0 20px;
+    background: linear-gradient(135deg, var(--forest), var(--forest-light));
+    border-radius: var(--radius);
+    padding: 18px;
+    display: flex; gap: 14px; align-items: center;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .procession-card:hover { transform: scale(1.01); }
+  .procession-icon { font-size: 36px; }
+  .procession-info { flex: 1; }
+  .procession-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 2px; }
+  .procession-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px; font-weight: 700;
+    color: #fff; margin-bottom: 3px;
+  }
+  .procession-time { font-size: 12px; color: rgba(255,255,255,0.7); }
+  .procession-cta {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff; border-radius: 20px;
+    padding: 6px 14px; font-size: 11px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+  }
+
+  /* ---- SPACING HELPERS ---- */
+  .mt4 { margin-top: 4px; }
+  .mt8 { margin-top: 8px; }
+  .mt12 { margin-top: 12px; }
+  .mt16 { margin-top: 16px; }
+  .mt20 { margin-top: 20px; }
+  .mb0 { margin-bottom: 0; }
+
+  /* ---- RESPONSIVE TWEAKS ---- */
+  @media (min-width: 430px) {
+    body { box-shadow: 0 0 60px rgba(0,0,0,0.3); }
+  }
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMSEhUSERIVFRUVFR8WFRcYFRUXFRsVFhcXFxUYFRgYHSggGh0mGxcYIjEhJSkrLi4wFx8zODMtNygtLi0BCgoKDg0OGxAQGy4lICUtLS0tLi0rLS0tLS0tLy0tLS0vLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAOEA4QMBEQACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAABQYBBAcDAv/EAEgQAAIBAwIDBQUFAwgIBwEAAAECAwAEERIhBQYxEyJBUWEHFDJxgSNCkaGxUnJzFTRDYpLB0eEWJDM1gpOywkRTg6Kz8PEl/8QAGwEBAAIDAQEAAAAAAAAAAAAAAAIDAQQFBgf/xAA6EQACAgECBAQDBQYFBQAAAAAAAQIDEQQhBRIxQRNRYXEUIjIzgZHB8BUjNKGx8QYkNULRUlNicuH/2gAMAwEAAhEDEQA/AO40AoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoDFAZoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQGDQEXxvjK26Z2ZicBQR88nyFThW5M179Qqo5NLgvMwmbQ66WPw4yQfQ+VSnVylVGrVjw9iwiqjdM0AoBQCgFAKA+WbG52AoDws72OUaonVxnGVIO/0o00ZaaNmhgUAoBQCgFAKAUAoBQCgFAKAxQCgME0MNmlecVhjUl5B8gcn8BvUowk+iK53wh3KVxnj0k7EKSsfgoOCR/Wx+lbUKkjk36qc3hdCHAq01dy7clcP0oZWG77L+4PH6nP4CtS6WWdbQ1cseZ9yyiqTfM0AoBQCgFAfEzhQWPQAk/IU67GJNJZZWuNzM/YzrJi2ZCDhguTIMLkfeGD0+dWwXbuW0yUllbkZw2eSGeFIY0Jlws+hWMfc1A6HJ6Drnz29Kskk18xbLDXzF6FaxrGaAUAoBQCgFAKAUAoBQCgFAKA0bywaQ57aRB+yhA/PGfzqSlgqlXzdzVm5dicYZpSfMyMx/M4qSsaK3potbt/iea8rWwHwE+pY1nxpEfg6u5C8X5W7NWkSQaBuQ+xA/e8asjcu5rz4dJv8Ad7+h58r8LgmJLtqZT/s8YGPBj4kf41U9TzbRNlcKdWJTz+BeFGNhVZs7IzQyM0AzQCgBNAM0BhhmiMNLuUPi1vJBNJDDayTWuntZIz8AJOc25+6wO+nPyFbMMOOW9znOyzT3Pw1mPV//AAmuSuJxTxsLeFo4oyFGrcliNT9CfMePjVdsXF7mzp9X8QnLBYxVRsjNAM0AzQDNAM0AzQDNAM0BmgFAKAUAoBQCgMGgK5dcYdrqS17BXiEWpmEi6snOxUnaszj8mTfr00Y0q3mw8+RC8DvktYZ7jspZWB8ADhcAhSR08MmtTSJSztg39XVK+yFfMl7/ANS58Nu+2iSXSV1qG0t1GRnBrbawcW2HhzcOuCH4zf3AvLeC3dMOC8wZclY1IywOfHJA9RVkYrlbZzrrLFdGEH7nxxbiU63tvbwummQFpAVBYKp3IOfHpSMYuDZi62aujCL2fUzzTxS4t5IDEUKSyCNgyksCT1BB8silcVJMzqbbK5Rw9nse7cSf333cyoFMWVTs315HVg57pFY5Vy5JeLLxfDz2IrhV/fzTXEIliCwyae0MZLeOMICB0xuT/lOUYJJ4KK7L5zlDK27mLfjF607WLGFJVGrttLEMm2Cseeu/idt+tHCGOYxG+52eC8Z8zM3GruylRb3RLDI2lZUXSVJ/aXp/kPHpRQjNZiJX3UzSt3T7o3uaeNMhS1t955gcHqETBy5+gOB6ViuGXzPoW6vUNYrh1ZGcNF3BZpLarD2QTWsJVi5QjOTJqwXI3Ix6VJuMp/MU1+LXSpQxjyJMc3Re5C8Knfu6PEydNIPiM+Pl+FQdTUuUv+Nj4HifrJAvxjiEkmhS/aaQ7RQpDojVt1EkkqklyN8DzFW8taW5pyu1EpYjnPksbE3y/wAfaZpLaUmO4QdHVQenUYOGHyxVc60sSXQ2qNS5twl9SIix43fzwTSrLBGLcsGyhJcoNR6nCDHzqbhBSS8zWjffOEpJpcufvLNy9xCS6tI5Wwjup6DIBDEAgeuM49apnFRlg36LJW0qXRshOWuapGmNtd6QzMwhdV0o+hijDcnfKn9PnbZVhZiaum1knPks69vUlZbmdL6OMupglR2UaRqDJpypPl3s1XhODa6mw5TV6Tezz/IjZeYJ7mV47MxRRxtpeaXByR1EaZ3386n4aik5FEtTZbPFTSS7sxJxO7gngjkuIJkmkC5VdMg8TgAkEbdfWnLFxykHdbCyMW08lxFUHSM0AoBQCgFAKAxQIg7/AJZtnaaUwI0si7sw1bhcAjPTw3HlU1M26tbdHlhn5Uytco8IlmtmBuJYSUEZ0FfjTKMTlSfAdCKoonHMlHpk6ev1EK7Y/In7+pdeF2hhhSNnaQouC7fEx8zVreXk4t1inNySxnsVkTiPjLdpt2kAWMnoSDnA9djV2M1bHI5lHWfN3Rjij9nxe3d9leExqfDXk7fp+NI71C2Sjq4t90e/PbgG0yf/ABS/OlPf2Ja5pcmfM++I/wC9bb+A/wCtYX2bJWfxUfZmOVHzd8Q3/ph+S4/u/Kln0xGlebZ+54zqG41GVI+zte/6FmcKD698VJP9zj1K5b61Ndlv/M3PaDpNlIp3ZiqoPEuWAUD1qFP1F2vSdTX4FehuRDxhRIQPsFiySBhjGp8fUY+tXNZq2NKM1HWLL7IvV5KkMTs2FRFJPgAMVqxTbOrY4wg89Dl8nCZf5LSbB0icz6fKIjSGx5ePyNb3OvEx6YOG6Z/Dqa8849C4XdlJOBc2M2O1QFgCQCVUhT89gpz0x6VrqSW0kdCVcpJTql1wRjxtNxeEowZreL7d1GBn7QBcb74cePn5VNPFTXma7Tnq1KO+Fv8AzK3aQPoeeQPLai5bt41Yqc5B7RsfEPMelWtr6e5qRhJZm945eUdX4ZPE8SNAR2ZUaNIwAB4Y8MeVaUk09zv1SjKCcOhWLHhSXlo66sOlzKY3HVJBMxB+XT8atcnGRowpV9T809vc8OFcRlluYYLhStxCsqucbOpVAsinpvipOKUcroyELZysVc/qSf5HxyPY2zxvBPDGbiJ2EgdQWILEq2/hjApbKWcp7GdHCppxkvmTZP3PC7KFo2MMaP2g7PSoDFydsY6+vpVXNNrqbcq6Ytbbk6tVm0ZoBQCgFAKAUBjFAedz8Dfun9KyupKH1IqPsvvO0tMk7q2k/TofwxVMa+SyXkdbjNfJcseRcsVaccj+L8EguQBMgbT8Lbhl6Z0sNx0H4VKM5R6FNtELV8yI/wD0NtSCHV38i8sjsv7hJ7v0qfjSKvg6u+/uzLcoWxKs/aOyMGV3lkdtugyxO3pWPFl2MfBVPDeXj1JGThcbTrcEHtEUopycaT12qKlLGC91Qc1Pua9jwCGKZ501h5M6++xU5Od16daObawQhpoQk5rq/U+W5bgMzzEOXkGHy7aSNsbeGMAjyIzUvEljBj4WHO5d2Zt+X4ldZGMkrJ8HayNIFPmoY4B9etYc5YMx00E8vL93k+eJcsWtwzPLEC74y2SG7oAGCOgwOlI2SXQxbparN5Lc+ByxCQqyPNKi9EklZk26alOzY9c0djMLSwxhtvHmyYKDGnAxjGMbY8sVA2MLlwQTco2+T2ZmhDdVimeND591TirfFfc1Xo609sr2ZJcK4TDbLohQKCck9WJ82Y7k1CUm+pdXRCtYijHDeERQIyRr3XYswJLAluuc/pRzb3YhRGCaj3PnhfBYrYnsQyqxJKaiUyfEKdh9KOTl1FVEKs8pjg3BIrbX2WvEjamDMSNXiRnof8BSU3LqYpohVnl7mxLw6NpUmI+0QFQ3jpbqD5iik0sE3VFyU+5rcT5fgnYO6YkHSRCUk28Na4OPSsxslFYIWaauby1v5oxYcuwRP2oDPINg8jtI4BGDpLE4+lHZJrBivTQg8rr67kqBUDYM0AoBQCgFAKAUB5XXwN+6f0rK6oynh5KL7KIuzjnTu5DgnS2oAlen06Vbct8nW4tc7nCxZw13L/VJyBQCgMUMFa9113siGSQJ2SvpV2AJJwfUdPDFW5xDJo8mb3FvbB529qxuntZJZTGIxJGA5BwSAQzDvHBO2TWW/l5sEYQl4rqk3jGx62vaW9ytu7tJDMp7MscsrKMlS3XGB+lYwpRb8iUeaq1Vt5T6GphjBdASODHcFYzrbKjKgDOckb9KllZRBJuElnoze4bctKr2lwxWZB8QOCy/dkQj6ZqMlh8y6FlM3KLrn1Rq3E8vu9oxZ+yIHbspOvBGxJHeAz1IqSS5miEpTUINdO5u2UAMwe2mBhKntF1lwW+7pBJ0keNRb2+ZblsIpzzB7Hl2WLn3eKWUd0yykyFticBVDZwSTn0Ap/tyzGP3vIn6s2uKN7tE8waR2ACqGYkamYKu3zNRiuZ4J3PwoOa3ZFwWzsNU63jSHclWCKD5IquBj51ZlJ4TRrxg3vJSz+vU172WZLJXZ5UkWcjLMQ+kuQAfA7Y9NqzFJzwV2OcaObdPJu8FybomCSV4BHh2diytJnbSW9PLaoz+ncuoebcxbccb+5aBVJ0DNAKAUAoBQCgFAKAUB85rJg0OLX0aRSZdAQjHBYdQp6isxTbLqq3KcU+jaRSvZ7xGGMyl5EjMixsQWA3IPn6Yq61No6OrovcUsNpZwdDRwdwQR5g5FUbnJPoVgGaAxWAQkcEgvnk7M9m0QQPlcAqc7jOfyq3K5cGooz+Ibxs0eaRyi7mmMLFRGqRkFN1BBf73XPTONgazty4IpTV0p42xseywPNcRzMhjSIHSGxqZ3GCcAnAA+uajlKLRPklZYpNYSNB7GYQ3YEZ1STloxld11Lg9dunjU8ptZKnCyMZ4W+SR4lw4zoki5jmTvIdshsbq3mD0NRjPDa7FttPiJNbSRHxW9zH7swVmjjj0yRKVDB8EatyA2MjbPhUnKPzYKVC6Li+sUt0eslk01zDMkTRCPJkdgFZ84wukbkddzWFLEWmSlXKd0ZRWMdfU+ry1khuveY0MiOmiRVI1jGMMoJGenSsJpx5WZnCULvEjumbV5btdRPGyNGrAaS2NWoEMDpBOBkfOsJqLLLISug49Dzt7y4RQkluzuBjUjR6Gx495gV/CjSbyRjZZFcrjl+Zr8bsp5rdVKAyGZWKAjCoD0ycZ26+pNShJRlkhqK52VJY3yfdvZy20uIVMlu+5XI1Rt46dRGV9KOSkt+pmFc6p4jvH+hPLVRun1QCgFAKAUAoBQCgFAUbm/mKQTe6wEoMaZJBs2t/hRD4EDvE+AxV9cNss3q6Iql2S69l5Lz/I5vxttMvaJJ3pF74B7wJUBtXoc1sJI9HwZLU0ctkPpezx+Bp8Lx2qatGM76xlf/3y+lZZ0uJJrSyUM59Ni2R8wSW8wETbkHYnuswbOhx4EgYDf1h5VXKCZ5HScPc6XZLon09+51ThF+s8KTL0dQ2M5wSNx9DtWpJYZzbYck3HyPviN8IYzIyuwXqEUs2PPA3olkzVW7JcqwvfYrI9o9j5yf8ALarvh5nV/YOsSzhfij6PtEsR1aT/AJTVhUTZBcF1T6Jfij0s+fbOV1jjMjM7BV+zPU0dEksmLeDaqqt2TSwvVFoqk5OwNAKdjIoCq8Z50W0lMdxbSqMEo40lHwNgpz19PDO9XQp5ujOppuGS1MeaqSb8u6JLljjovYTMqFBrK4JBO2Nzjp1qE4cjwa2t0ktLb4cnkmDUDTWCpcc5290fTPZzAH4XBQo3yOfy61fCrm6M6+k4V8Ss1zWfLuTHLfHFvIe2RWUaiuGxnK/I1XZDleDT1mllprXXJ5ZK4qBqmRQGaAUAoBQCgFAKAUAoDiPOd52d85jPeVm1HchSx6qDsG01u1/Sep4VpZXaSXjrbt7f3IrmFzqQHGAm2w65Od+p8Kkjc4FXGNc3nfL/AA7EZF8Q3xuN/Less7VyzCSXkSlpPHJda3A0MTp1dM47hahxNXp76eHeHV9Xf8dzrXs9BFsw1AgStpxjAG2223XPStS3qeU1P1LbGy/uWYiq0a2+ThfJsIbiMK42ErbeGFVzj8q6Nn0ZPoHE5taCT9EdvNqh6op/4RXO5meC8Wfm/wASKuOWoDcRXKIEeM5OkYDDSRgjp4g59Kl4kuVo2oa+5VSpbyma/GuYnQEW0JkI6yORHAvzdsavpUoV56slp9JGb/eSx6dX+BVLnj/EXPcvbFD4IrqT8supH51eq4LrE7ENHo4rMqpv1/szP+l/EbMqb2JZI26MoUZONsOvd+mKeFCf07Gf2ZotUv8ALyxLyZc+W+ZYb1SYiQw+JGwGX/EeorXnW4PDOJrdBdpZYmvv7EP7VVHuWfHtFxU9Pnmwje4A38Wl6Mx7KP5kf4rf9tZ1P1mOP/xj9kXOtc4hT/amn+ok4ziRf1q/T55jt8AeNWvZnz7Kv5j/AOq/6imo+sxx7+MfsiX4/wAzwWZQT6h2mcFV1Du4znG/j5VCFbn0NLSaC3VJ+F2N7g3E0uYhLFq0N8JZSpONsgHwqMo8rwU30SonyS6m9USkUAoBQCgFAKAUAoDivtI4cRfSMg1alRjjqGfKDb1K/mK2YTWEme24LqF8Koz82l9xVZXf4GJwpIAJOBjqBVyafQ69dVSblBLf+Z8BCSAAST0Hnnpis8y6stcsbnpHau2nShOokLgdSOo+lQdkU+pB2wWW30O7ckWQhsYEHUxh2/ecamH0Jx9K1ZvLyfPeI2+LqZy9f6E6agaRxDk8Y4rGB0E0gH9mQV0bfsz3fEW5cOefJfkdurnHhCI5n42lnA0z7n4UXxZz0H5E/Sp1wc3g29FpJ6q1Vx+/2OTWkV1xa5AdyQN2P9HGv9Vc9fAeJrebjVHY9ja9NwyjMVv282y1y+yyPB03En9XKqfxxjNUfFM46/xJb3giL5YiltLw8Pul1QzAroO6HO6unocHPz86nY1KPPE29dKrU6b4yl4lHr5+xD8Yt34XffYse5h48+MbZ7reY2I+lWRfiQN7TSjxLR4n16P3Ltz3xJZ+FLKoBEpQjPVSTv8AUHIrXpjizBwOE0OvX8j7ZNj2T/zI/wAVv+2san6yHH/4t+yLpWucQqHtTbFgw85F/Wr9P9Z2eArOsXsyvcpc32llZrGzvJLksyKjDBY9NR7vTG+attqlOZ0OIcM1Oq1TklheeT0HA7ritws92nY26jCJkayuc4Hqdsk49Kw5xqjyrqR+Mo4dS6qHzTfV+R0i3iCKEUAKoAUDoANgBWplvdnmpScnzPqz0oRI3ivEew0ErlWbST5bbGtTU6lU4eNmbGnoduUuyPS34nE7mNWywGTgHGPn0qdeprsfLFkJ0TgsyN2ryozWQKAUAoBQFb5s4fCIJZuzjD93U5IQ4Dr1cAnYbj1AqFico4z7HR4fdY7Y1pvG+33eRyyG3juZlw32KqwAA0smFJGoeJOM6vHFTc5U17r5j1rnOivp8za9Tc4nYxOmpHVTDGqqytgau6QSfLc4+tUUWzXyyWcspoumnytZ5mSvI1/DNdKjAlzqfUVARz2YVsL4Z0g79cVOVEk89vI0+KVW1UOae3T1W/mdRtoFjUIihVGwVQAoHoBsKsPKSk5PLeT1NDBwXlm7SG/jkkYKiysWY9ACHG/410rFmvY+ha6t2aKUI9cI63/plY4J96j29Tn6DGT9K0fCn5Hi/wBm6r/tv8Cne1q61rbFSdLBnGQR4ADY+lbGmW7O5/hytxnNvqtjc9nFxFbWElxJ96Yg4GWOAoVFA3Jznb1NQ1G88FHHVO7VxrXl/wAnjfc6zdocDsl1K2iUFZFQZDA4U7MMEZ6H51KNK7irhdSgnJ5e/TdN9vw7m1yvDJdXS3UsomWFCiuE0rqO22+C3XJGw6Y8o2YiuVFWtnXp9O6IJpt7ruQntex71F59hv8ALW2P76t0v0s6n+G/sJf+35I+Jyf5CTP/AJ+3y1nFF9sYrx+13jy/ItPso/mR/it/dVOp+s5HHn/nH7Iuta5xSne1U/6if4i/rV+m+s7XAP4xezI3kjl+C64aFmQEl3w4A1g6iAQ3Wp22SjPY2eKa27Ta5uuXlt2/Aj+Accm4Zcmyu2LRZ7rknuhvhdc/cPiPDfyqU4RsjzLqX6rSVa+j4ihYl3X67nUVbxHStM8q9jzFyuooGXWBkrkaseeOuPWs4fUlySS5mtvM1OJ8NE+kMxCqSSo8Tjbf0rT1Wm8dJN7eRdRqHTlxW55cHsVto++VBLbtnGcnCAk/MD61jSaSNMWkiWoulfPYlRW4apmgFAKAUAoCi+1TiIW3W2DDXM67HwVWDaj5DIFWVp9TucDok7vFxtFMrq2Sg9noBCR5ZowI1DNsGONyMBvEjbcVzJWtvOTpuyT3z1fc+53DZdomVxhVOAMYbCsV1aSDqOCfWsLPSMjEcrZPY15Z0tb+2uTJ97SyHTlUIKZ7pIx3j1Odq3dHOU4OLRPlnqNJZVj1+869E4YAgggjII6YqeGup49xcXhn3QwcH5WhR+IRJIoZWlYFSMg7P1Hzrp2PENj6DxCcoaFyi8PCOmXXINm0qSqhj0sGKKe42NwCp2AzjpitJXzxhnk4cZ1SrdbeU1jfqjHtD4H7xalkTVJF3kAJG22sAeOw6VmixxluZ4PrPA1PzPZ7Mq3ss41GrG1lxln7SInGNekKwGehIG31q7UQfVHY4/pJySvj2WGXOblSJzOXZj7xIryeGUTGIvRfP51r+K9jgR19kVBL/anj3fcmo444UwAqIg9AoAqG8mabcrZ56tnGOZOIPxK+AhUEH7KHbBKgklm9NyflW/WvDie50NS4fpHKz3fuXDnrhy2/Co4V6IyDPmfE/U5qimXNZk4nCbndxB2S75N/2WzFrFQfuSOo+ROr9WNQ1H1mvx6ONZL1S/oWa+v4oV1yyKi+bECqVFs5NdU7HiKyVr2lMj8PZixHeUpt1JOwIPSr9PtM6vBOaOsSXqfXsvP+oJ+++f7ZrGo+tjjv8ZLPoeXtI5f94g7aMZlhGRjqydWX+/6etKLFF4Znguu8C7kn9MiG5F56UIYbyQgjdJG6EddLHzHhVl1DbzE3+K8Glz+Jp1lPsevLnHIITPPITJPNJkKg1SlcalUDwAUqN8AYNLIOSSXQp1ekttUK4rEYrfPTPc0L3nOVllWSZIi8qtGFId40UqSvdwNyNyzDqakqY5RdXwuCcZRjnCeeyb/XoWNOE3d3oa4nHYkh9K6QCMggjQDnI8Sxx1AzvVLlGOUkc6Wo09GVXD5t1l/r8i4rVBxz6oZFAKAwaAj+PMBbzFmKgRtkqcMO6dwfOpR6l2mTlbFLzOA29tJNk5LPjbVkl8dQrHqQN8em1bM7IweHsfRJWV04j0/InrO7H2UToYDsow5UtjcalwNiwHxftGtCdWW5ReUc+yrPNOLyuvTp+vQlLuUBTJI4G2pVXuxtpQMNjnvZb8q1K4tvCRq1xbajFf8AJXb62edjP3RGU1a9ON120EdS+dtuuxrpV2RqXJ1Z0qrYUx8Pvn9P2LN7IcC4mDEhhGNK52xqOvbzB0/nV12MZRyv8RL93BrodYrWR5I4ZyaM8Sh/it+SvXRt+zPf8T/gJeyO6VzjwAoDn/Nvs+7VjNaEI5OWQ7KW/aUj4T/92rZqvxtI9Dw/jbqh4VyzHzI61veOQDszCZANgWVX2/eVhn61Nqp7mzZVwm183Nj2/sfFzwri9/3Z8RR+IJVV/sqSx+RopVw6Ga9RwzRfNXmUi5cqcqRWS5XvyN8UhxnHko8BVFlrmcXX8Ss1cvm2XZH3znwR7y37FGVTrDZbOMD5ViqfI8keG6taW7xJLJU7PkW/iUpFeBFznClgMnqavldBvODs28Y0dsuayrLNW15Bu/eopJ2WVA4LtrJbCnPRt+vrWXfHkwidnGdM9PKFceV422LzzbwM3lv2KuEOoNkjI28MVr1z5ZZOFw/WLS3+K1k8+TuAvZQtE0gcFywIBGM4yNzS2zneTPEdZHVW+Io4J41X6mh0Oa8yezhmkeW1dQGJbs2yMMdyFPkfyrbr1OFhnqNBx9VwVdy6dyt8A4UV+0kkkSPUY5exIEqsp+EjqV9Vz8qunLbY6Ot1akuSEU5bNZ6PP5l4uIra3jjktrqTLnChme4jfHUSKckDfqMEbfKtfmnJ4Z5qWoscnG6P5Nex9ni11G/2ccZgWQRqioRkZx3GB64wemBnHnWOSOPU1JRi+vUuMUgYZBBHoc1rtYNZrB6UAoBQGDQFJ9rF8Y7MIpx2sgQ/uAMx/wCkD61dSsyO3wGlWanMuyz95zLhfFOxQkFy+oaV1ERgbamI8W8BtWb6HZ2PWajTO2fbGPLc8uK3yy/dOpWbD53ZCSVDj9obDNZopdSx2JaeiVaxnby8n6Hjc3rPHHG3SMEfPfb8BgfSpwqUXJruWQpUJOS7khDx9lABTVvk97SBgaVEQUdzG/n1qiWkTeU9zVloVzNp/r18z75T4j2V/C6ZAeUIQW1HTIdJy2Bncg/Sr3DEMEOI6fn0kovqlnp5Heq1T5/3OIcjj/8Apw/xH/6JK6Fv2Z73iv8Ap8vZf1R3EVzjwR8u4AJPQDJ+VAQqc3WLDIuoiMhR3urHoB5nepuqXkVeNB9za4pxu3ttPbzJGW+EE944/ZUbmsRg5dCUrIx6s8+HcxWs79nDOjvgkoDhwBjJKncDcb+tJVySy0YjZGTwmfNzzNaxlw0oPZnEhVXdUPlIyAhD8zWVBmHbFHpd8ftoljd54wsv+zbUCGHmCPu9N+m4rHJIl4kcZyZbmC0AJN1BgdftY/n505JZxgc8OzPg8w22vszMA5TtACGBMYBYsu24wCcinI8ZMeJHOGe/DeLQ3CGSCQSIDgsuSMjqB50lFxe5mM4yWYmsnMlqYzMJgY1bSzhXKhh1DHG31pyvODHiR65JCzu0lQSRMrowyrKcgj0rDTTwyUWpLKK7w/iM739zZyOCiRB0ZU0uO0O2TkgkDxx9KscUoqRXXZJWtPdIq3F+TZLcSvreSJY9ycFj2jsZWwPFe42fEitiFyex67T8Vjc4w5Unn+i2JPhsME9lFcoViNqG7QRomksMa+6MAasA58jUG5Rljrk5mvhZXqJRll56Z8jKTpL2hiJlknj1OhOVXRgZjQjBzkkAkED8KxjGMmpjDXN2JbkLh8sML9qpTW+pUOxAxjp4ZqF0k3sV3Si3sWmqSkUAoDBoCl+1WwMtorjpFKGY+SFWUn6Eg/Q1dS/mOnwzVz085Sgsya2Xmzkl3EoxpOP6vWt2SSO5wHXarUc0bot/+W34HkqDGW+gHU1HB1rNTOU/CqS26t9F+Hc+44tWdIO3yxWUsmlquJPRSj8Q44bx1eTwFRO0nlE1ypYdtcQqAc9shB8MKwZj9ADSe0GeS47xXUU3xoqa5WnzLud9rQPNHEuRf96Q/vyf/HJXQt+yZ7zi3+nP2X9UduFc48GZoCkezKCN7FlZQw95kzkZBIfIP4afwrY1Emp/caumjHk+80uWuHzT3F3drNEJRcvD34TI0aRMVRVOsaQRg7DepWSUYqOOxCqDlKUsk7a8EmS8W7nniYLC0WFi7M94q2c6jnZD1O341U5pxwkWqtqXM2Q/LsUlrbSxwoLu1Z3KSwspm0tkNqSTCyEHO4Y5qc2pSXZlUE4ReN0bdvxO2g4S81iCUijYIHyWEnTDhvHUckdPKsYk7MSJ80FU3EmuVLQLaQk95nQSSOcEvI41MxPzP0GANhVdkvmLaorkRG8aUfyrYbf0U4/9qVOL/dy+4rms3R+8i7O8Xhd1dQPtBIhurdR0DDIkiX1J04H+NTadkU/uK0/ClKPbqj2kSSKK34fGwSa41TXL4B0RsS9wwztks4UZ6D5VhPLc/LoZeyUfPqa/s8vY4Li54ckiuiuZYGDhhoONSZ8x1PqTWb4uUVYY081GTr/AkeF5/lm7PgLaIfiT/nUZfZIsh9sy34z1qg2c+RoWnBYIi5jiVO0+MDZW+a9PyqTnJl1mptsSU5ZwY4dwO3gYvDEqM2xIydvIZOw+VHNvqVubfUkcVEiZoBQCgFAeU8IdSrDKsMEHoQdiDWUxGTi8o5XzByBJG5eFTLFgY3HaL8x97bG4+tbld0JfUW2cV1mlpS0//VnHp5FQv7IxaA6OD45UjYHpuPKrW456nX4LxHVa6N/SG23Z8zzvufatjeMbHfYHfG2MeB3qXMlucd6SzUrk1knOcduq27p+xtw8tzzYWGBy2euCqjzyzYFQnOC6HT4TxXVxuctRJKrt3f3HTeR+Ufc1LyNrlYY2+FB1IXxOfE+g6Vp2W82xq8Tvq1Wo8WMcevdlsqo0u5x/kvgF173HcrCRGsjEs50gqwZTpHU7N5Yretsi44PZ8T1+n+FdPN8zwdgFaJ4wzQHOvZ5wd3thIt1NEPeZNUamPs2CyEEbrqBOOoNbV81zYcTS08Hy55vuLJd8tfbtc2szW8r4EmFV4pMdDIh+8M9QRVKt25ZLJc6d+aLwz7g5fLMz3U7XBZGjC4VIlR8a9KL4kADJJPljejnjojKrb+pmtwzl64toxbwXQ7EZ09pEHlQE5wrhgp9MqazKxSfM0RVUox5YvY3uGcuQw2ptAC6OGEhYjU5kzrYkY3OfCoeI2+ZE1UlHlNHhPL1xboII7w9guyZiUzqv7IkzpwOmSpqUrIy3a3IwqlHZPY37ngmq6t7nWR7ujoExnV2gAJLE58BWOfEWiTrzNSMce5eiunt5JOtvL2i+v9U+moKf+GkLHFPHcWVKbTfY0eN8mw3d0lxOzMqIE7LYK2GJ758Rv026VKFzjFpEZ6dTmpM9uL8sLI9vJAwge2bMZVARpIwyFQRsaxG1rKZmdKbUl2PC75am96kuoLoRNLGqEGIOML0xk+dZVkcYaIyqk5OSZL8Es5IoVSaYzSZJaQjGSSSMDwAGBj0quTy9i2CaW7JGsExQCgFAKAUAoBQGMUB8tGD1APzFZyzKbRE8M5ejhcvnLF3fpgYc5xjpsNs1OVjawVutc7n3ZL6arJmQKAzQGAKBigM0Bp8K4bHbxrFEulFzt6kksT6kkmpSk5PLIxgorCNvFRJDFAMUAxQDFAZoBQCgMUAoBigM0AoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAKAUAoBQCgFAf//Z" alt="Wimborne Minster Folk Festival" style="width:200px;height:auto;margin-bottom:16px;border-radius:8px;"/>
+  <div class="splash-title">Festival Companion</div>
+  <div class="splash-sub">Wimborne Minster · June 2026</div>
+  <div class="splash-date"><strong>12 · 13 · 14 June 2026</strong><br>Wimborne Minster, Dorset</div>
+
+  <div class="countdown-strip">
+    <div class="countdown-unit">
+      <div class="countdown-num" id="cdDays">81</div>
+      <div class="countdown-label">Days</div>
+    </div>
+    <div class="countdown-sep">:</div>
+    <div class="countdown-unit">
+      <div class="countdown-num" id="cdHours">00</div>
+      <div class="countdown-label">Hours</div>
+    </div>
+    <div class="countdown-sep">:</div>
+    <div class="countdown-unit">
+      <div class="countdown-num" id="cdMins">00</div>
+      <div class="countdown-label">Mins</div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
+    <img src="data:image/png;base64,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" alt="Wimborne Town of Culture 2026" style="width:80px;height:80px;border-radius:50%;box-shadow:0 0 20px rgba(255,220,0,0.3);"/>
+    <div style="margin-left:12px;text-align:left;">
+      <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(245,239,224,0.5);">Part of</div>
+      <div style="font-size:14px;font-weight:600;color:var(--brass-light);line-height:1.2;">Wimborne Town<br>of Culture 2026</div>
+    </div>
+  </div>
+  <button class="splash-btn" onclick="enterApp()">Enter the Festival →</button>
+</div>
+
+<!-- APP SHELL -->
+<div id="app">
+  <!-- TOP HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#fff;">
+          <img src="data:image/jpeg;base64,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" alt="Festival" style="width:100%;height:100%;object-fit:cover;object-position:center;"/>
+        </div>
+        <div>
+          <div class="header-title">Festival Companion</div>
+          <div class="header-sub">Wimborne Minster</div>
+        </div>
+      </div>
+      <div class="header-live">
+        <div class="live-dot"></div>
+        <span class="live-text">Festival Mode</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area">
+
+    <!-- ======== NOW SCREEN ======== -->
+    <div id="screen-now" class="screen active">
+      <!-- Hero -->
+      <div class="hero-section">
+        <div class="hero-greeting">Saturday · 14 June 2026</div>
+        <div class="hero-title">Good afternoon,<br>festival-goer!</div>
+        <div class="hero-day">It's 2:15pm · 47 events today</div>
+        <div class="hero-pills">
+          <div class="hero-pill active">🎵 Music</div>
+          <div class="hero-pill">💃 Dance</div>
+          <div class="hero-pill">👨‍👩‍👧 Family</div>
+          <div class="hero-pill">🍺 Food</div>
+        </div>
+      </div>
+
+      <!-- Now ribbon -->
+      <div class="now-ribbon">
+        <div class="ribbon-dot"></div>
+        <span class="ribbon-text">Happening right now · 6 events live</span>
+      </div>
+
+      <!-- Live events -->
+      <div class="events-list" style="margin-top:16px;">
+        <div class="event-card" onclick="openModal('banter')">
+          <div class="event-card-stripe" style="background:var(--cat-concert)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Banter</div>
+              <span class="event-badge live-now">● LIVE</span>
+            </div>
+            <div class="event-meta">
+              <span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 0C4.3 0 3 1.3 3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3zm0 8c-2 0-6 1-6 3v1h12v-1c0-2-4-3-6-3z"/></svg> Allendale Centre</span>
+              <span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 0C2.7 0 0 2.7 0 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm.5 9H5.5V5.5h1V9zm0-5H5.5v-1h1v1z"/></svg> Ticketed</span>
+              <span>🚶 3 min</span>
+            </div>
+            <span class="event-tag" style="color:var(--cat-concert)">🎸 Concert · Until 10pm</span>
+          </div>
+        </div>
+
+        <div class="event-card" onclick="openModal('kitty')">
+          <div class="event-card-stripe" style="background:var(--cat-session)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Kitty Vernon Singaround</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta">
+              <span>🦁 The Lion Hotel</span>
+              <span>🚶 5 min</span>
+            </div>
+            <span class="event-tag" style="color:var(--cat-session)">🎤 Lion Session · Until 2pm</span>
+          </div>
+        </div>
+
+        <div class="event-card" onclick="openModal('anon-morris')">
+          <div class="event-card-stripe" style="background:var(--cat-dance)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Anonymous Morris</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta">
+              <span>🏛️ The Square</span>
+              <span>🚶 1 min</span>
+            </div>
+            <span class="event-tag" style="color:var(--cat-dance)">💃 Border Morris · Outdoor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Starting soon -->
+      <div class="section-head mt16">
+        <span class="section-title">Starting Soon</span>
+        <span class="section-link">View all →</span>
+      </div>
+      <div class="events-list">
+        <div class="event-card" onclick="openModal('pip')">
+          <div class="event-card-stripe" style="background:var(--cat-session)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Pip Evans · Americana Jam</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta">
+              <span>🦁 Lion Hotel</span>
+              <span>⏱ In 45 mins</span>
+              <span>🚶 5 min</span>
+            </div>
+            <span class="event-tag" style="color:var(--cat-session)">🪕 Open Session · 3pm – 6pm</span>
+          </div>
+        </div>
+        <div class="event-card" onclick="openModal('walled')">
+          <div class="event-card-stripe" style="background:var(--cat-music)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Walled Garden Acoustic</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta">
+              <span>🌿 Walled Garden</span>
+              <span>⏱ In 30 mins</span>
+              <span>🚶 7 min</span>
+            </div>
+            <span class="event-tag" style="color:var(--cat-music)">🎶 Live Music · Outdoor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Procession Banner -->
+      <div style="margin-top:20px;">
+        <div class="procession-card" onclick="goToScreen('info')">
+          <div class="procession-icon">🥁</div>
+          <div class="procession-info">
+            <div class="procession-label">Festival Highlight</div>
+            <div class="procession-title">Grand Procession</div>
+            <div class="procession-time">Saturday · 5:30pm · Town Centre</div>
+          </div>
+          <button class="procession-cta">View Route</button>
+        </div>
+      </div>
+
+      <!-- Alert -->
+      <div class="mt16">
+        <div class="alert-banner">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-text">
+            <strong>Road Closure Update</strong>
+            East Borough closed from 10am. Follow signed diversion via Crown Mead. Procession route active from 5pm.
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured artists -->
+      <div class="section-head mt20">
+        <span class="section-title">Artists This Weekend</span>
+        <span class="section-link" onclick="goToScreen('explore')">See all →</span>
+      </div>
+      <div class="scroll-cards">
+        <div class="scroll-card" onclick="openModal('banter')">
+          <div class="scroll-card-img" style="background:linear-gradient(135deg,#4A1942,#8B3A7A)">🎸</div>
+          <div class="scroll-card-body">
+            <div class="scroll-card-name">Banter</div>
+            <div class="scroll-card-sub">Fri Eve · Allendale</div>
+          </div>
+        </div>
+        <div class="scroll-card" onclick="openModal('gidderskins')">
+          <div class="scroll-card-img" style="background:linear-gradient(135deg,#2D5A27,#4A7A42)">🌿</div>
+          <div class="scroll-card-body">
+            <div class="scroll-card-name">Gidderskins</div>
+            <div class="scroll-card-sub">Border Morris · Sat</div>
+          </div>
+        </div>
+        <div class="scroll-card" onclick="openModal('exeter')">
+          <div class="scroll-card-img" style="background:linear-gradient(135deg,#1A4A6B,#2E7BAA)">🕺</div>
+          <div class="scroll-card-body">
+            <div class="scroll-card-name">Exeter Morris</div>
+            <div class="scroll-card-sub">Cotswold · All days</div>
+          </div>
+        </div>
+        <div class="scroll-card" onclick="openModal('mk')">
+          <div class="scroll-card-img" style="background:linear-gradient(135deg,#6B4400,#C9952A)">🎻</div>
+          <div class="scroll-card-body">
+            <div class="scroll-card-name">Mitchell & Kirby</div>
+            <div class="scroll-card-sub">Fri Eve · Allendale</div>
+          </div>
+        </div>
+        <div class="scroll-card" onclick="openModal('alton')">
+          <div class="scroll-card-img" style="background:linear-gradient(135deg,#6B2000,#C94040)">🔴</div>
+          <div class="scroll-card-body">
+            <div class="scroll-card-name">Alton Morris</div>
+            <div class="scroll-card-sub">35th Anniversary</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:8px;"></div>
+    </div>
+
+    <!-- ======== EXPLORE SCREEN ======== -->
+    <div id="screen-explore" class="screen">
+      <div class="hero-section" style="background: linear-gradient(160deg, #1E1520 0%, #4A1942 100%)">
+        <div class="hero-greeting">Browse by interest</div>
+        <div class="hero-title">Explore the<br>Festival</div>
+        <div class="hero-day">47 events across 12 venues</div>
+      </div>
+
+      <div class="section-head">
+        <span class="section-title">Categories</span>
+      </div>
+      <div class="cat-grid">
+        <div class="cat-card" style="background:var(--cat-concert)" onclick="filterCategory('concerts')">
+          <div class="cat-icon">🎸</div>
+          <div class="cat-name">Headline Concerts</div>
+          <div class="cat-count">4 events · Ticketed</div>
+        </div>
+        <div class="cat-card" style="background:var(--cat-dance)" onclick="filterCategory('dance')">
+          <div class="cat-icon">💃</div>
+          <div class="cat-name">Morris & Dance</div>
+          <div class="cat-count">10+ sides</div>
+        </div>
+        <div class="cat-card" style="background:var(--cat-session)" onclick="filterCategory('sessions')">
+          <div class="cat-icon">🎤</div>
+          <div class="cat-name">Lion Sessions</div>
+          <div class="cat-count">5 sessions · Free</div>
+        </div>
+        <div class="cat-card" style="background:var(--cat-music)" onclick="filterCategory('music')">
+          <div class="cat-icon">🎵</div>
+          <div class="cat-name">Live Music</div>
+          <div class="cat-count">All stages · Free</div>
+        </div>
+        <div class="cat-card" style="background:var(--cat-family)" onclick="filterCategory('family')">
+          <div class="cat-icon">👨‍👩‍👧</div>
+          <div class="cat-name">Family</div>
+          <div class="cat-count">Children's programme</div>
+        </div>
+        <div class="cat-card" style="background:var(--cat-procession)" onclick="filterCategory('procession')">
+          <div class="cat-icon">🥁</div>
+          <div class="cat-name">Procession</div>
+          <div class="cat-count">Saturday · 5:30pm</div>
+        </div>
+        <div class="cat-card" style="background:var(--cat-food)" onclick="filterCategory('food')">
+          <div class="cat-icon">🍺</div>
+          <div class="cat-name">Food & Drink</div>
+          <div class="cat-count">Traders & Microbrewery</div>
+        </div>
+        <div class="cat-card" style="background:#5C5278" onclick="filterCategory('all')">
+          <div class="cat-icon">🌟</div>
+          <div class="cat-name">All Events</div>
+          <div class="cat-count">Full programme</div>
+        </div>
+      </div>
+
+      <!-- Dance Sides -->
+      <div class="section-head mt20">
+        <span class="section-title">Dance Sides 2026</span>
+        <span class="section-link">All →</span>
+      </div>
+      <div class="events-list">
+        <div class="event-card" onclick="openModal('gidderskins')">
+          <div class="event-card-stripe" style="background:var(--cat-dance)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Gidderskins</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta"><span>📍 Various venues</span></div>
+            <span class="event-tag" style="color:var(--cat-dance)">💃 Border Morris · Hereford</span>
+          </div>
+        </div>
+        <div class="event-card" onclick="openModal('alton')">
+          <div class="event-card-stripe" style="background:var(--cat-dance)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Alton Morris</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta"><span>📍 Town Centre</span></div>
+            <span class="event-tag" style="color:var(--cat-dance)">💃 Border · 35th Anniversary</span>
+          </div>
+        </div>
+        <div class="event-card" onclick="openModal('exeter')">
+          <div class="event-card-stripe" style="background:var(--cat-dance)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Exeter Morris</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta"><span>📍 The Square</span></div>
+            <span class="event-tag" style="color:var(--cat-dance)">💃 Cotswold · 40 dances</span>
+          </div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-stripe" style="background:var(--cat-dance)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Anonymous Morris</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta"><span>📍 The Square</span></div>
+            <span class="event-tag" style="color:var(--cat-dance)">💃 Border · Parkstone, Poole</span>
+          </div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-stripe" style="background:var(--cat-dance)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">East Kent Morris</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta"><span>📍 Various</span></div>
+            <span class="event-tag" style="color:var(--cat-dance)">💃 Cotswold · Est. 1953</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lion Sessions -->
+      <div class="section-head mt20">
+        <span class="section-title">Lion Sessions</span>
+        <span class="section-link">Info →</span>
+      </div>
+      <div class="events-list">
+        <div class="event-card" onclick="openModal('friday-session')">
+          <div class="event-card-stripe" style="background:var(--cat-session)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Open Folk Session</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta"><span>🦁 Lion Hotel</span><span>Fri · 7:30pm</span></div>
+            <span class="event-tag" style="color:var(--cat-session)">🎤 Songs & tunes · Andrew Helson</span>
+          </div>
+        </div>
+        <div class="event-card" onclick="openModal('kitty')">
+          <div class="event-card-stripe" style="background:var(--cat-session)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Kitty Vernon Singaround</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta"><span>🦁 Lion Hotel</span><span>Sat · 11am–2pm</span></div>
+            <span class="event-tag" style="color:var(--cat-session)">🎤 Participatory · All welcome</span>
+          </div>
+        </div>
+        <div class="event-card" onclick="openModal('pip')">
+          <div class="event-card-stripe" style="background:var(--cat-session)"></div>
+          <div class="event-card-body">
+            <div class="event-card-top">
+              <div class="event-name">Pip Evans · Americana Jam</div>
+              <span class="event-badge free">Free</span>
+            </div>
+            <div class="event-meta"><span>🦁 Lion Hotel</span><span>Sat · 3pm–6pm</span></div>
+            <span class="event-tag" style="color:var(--cat-session)">🪕 Bluegrass, folk, swing</span>
+          </div>
+        </div>
+      </div>
+      <div style="height:8px;"></div>
+    </div>
+
+    <!-- ======== MAP SCREEN ======== -->
+    <div id="screen-map" class="screen">
+      <div style="background:var(--plum-dark); padding:16px 20px;">
+        <div style="font-family:'Playfair Display',serif; font-size:20px; color:var(--cream); font-weight:700;">Festival Map</div>
+        <div style="font-size:12px; color:rgba(245,239,224,0.5); margin-top:2px;">Wimborne Minster Town Centre</div>
+      </div>
+
+      <!-- Illustrated town map -->
+      <div class="map-placeholder" style="height:360px; position:relative;">
+        <!-- Roads -->
+        <div class="map-road-h" style="top:45%; left:5%; width:90%; opacity:0.9;"></div>
+        <div class="map-road-h" style="top:30%; left:15%; width:60%;"></div>
+        <div class="map-road-h" style="top:62%; left:20%; width:55%;"></div>
+        <div class="map-road-v" style="left:40%; top:15%; height:70%;"></div>
+        <div class="map-road-v" style="left:60%; top:25%; height:50%;"></div>
+        <div class="map-road-v" style="left:25%; top:30%; height:40%;"></div>
+
+        <!-- Buildings -->
+        <div class="map-building" style="top:32%;left:42%;width:15%;height:10%;"></div>
+        <div class="map-building" style="top:48%;left:42%;width:13%;height:8%;"></div>
+        <div class="map-building" style="top:33%;left:62%;width:12%;height:9%;"></div>
+
+        <!-- Map label -->
+        <div class="map-label">📍 Wimborne Minster</div>
+
+        <!-- Venue pins -->
+        <div class="map-pin" style="left:41%;top:43%;" onclick="openModal('allendale-venue')">
+          <div class="map-pin-circle" style="background:var(--cat-concert);">
+            <div class="map-pin-inner">🎸</div>
+          </div>
+          <div class="map-pin-tail"></div>
+        </div>
+        <div class="map-pin" style="left:29%;top:38%;" onclick="openModal('lion-venue')">
+          <div class="map-pin-circle" style="background:var(--cat-session);">
+            <div class="map-pin-inner">🦁</div>
+          </div>
+          <div class="map-pin-tail"></div>
+        </div>
+        <div class="map-pin" style="left:52%;top:44%;" onclick="openModal('square-venue')">
+          <div class="map-pin-circle" style="background:var(--cat-dance);">
+            <div class="map-pin-inner">💃</div>
+          </div>
+          <div class="map-pin-tail"></div>
+        </div>
+        <div class="map-pin" style="left:65%;top:35%;" onclick="openModal('walled-venue')">
+          <div class="map-pin-circle" style="background:var(--cat-music);">
+            <div class="map-pin-inner">🌿</div>
+          </div>
+          <div class="map-pin-tail"></div>
+        </div>
+        <div class="map-pin" style="left:35%;top:60%;" onclick="openModal('microbrewery-venue')">
+          <div class="map-pin-circle" style="background:var(--cat-food);">
+            <div class="map-pin-inner">🍺</div>
+          </div>
+          <div class="map-pin-tail"></div>
+        </div>
+        <div class="map-pin" style="left:58%;top:56%;" onclick="openModal('minster-venue')">
+          <div class="map-pin-circle" style="background:#5C5278;">
+            <div class="map-pin-inner">⛪</div>
+          </div>
+          <div class="map-pin-tail"></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="map-controls">
+          <button class="map-ctrl-btn">+</button>
+          <button class="map-ctrl-btn">−</button>
+        </div>
+
+        <!-- Map overlay gradient -->
+        <div class="map-overlay"></div>
+      </div>
+
+      <!-- Legend -->
+      <div style="padding:12px 20px; display:flex; gap:12px; flex-wrap:wrap; background:#fff; border-bottom: 1px solid rgba(74,25,66,0.08);">
+        <span style="font-size:11px; display:flex; align-items:center; gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--cat-concert);display:inline-block;"></span>Concert</span>
+        <span style="font-size:11px; display:flex; align-items:center; gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--cat-session);display:inline-block;"></span>Sessions</span>
+        <span style="font-size:11px; display:flex; align-items:center; gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--cat-dance);display:inline-block;"></span>Dance</span>
+        <span style="font-size:11px; display:flex; align-items:center; gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--cat-music);display:inline-block;"></span>Music</span>
+        <span style="font-size:11px; display:flex; align-items:center; gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--cat-food);display:inline-block;"></span>Food</span>
+      </div>
+
+      <!-- Venue list -->
+      <div class="section-head">
+        <span class="section-title">All Venues</span>
+      </div>
+      <div class="venue-list">
+        <div class="venue-card" onclick="openModal('allendale-venue')">
+          <div class="venue-icon" style="background:#F3E5F5;">🎸</div>
+          <div class="venue-info">
+            <div class="venue-name">Allendale Centre</div>
+            <div class="venue-detail">Headline Concerts · Ticketed · 3 min walk</div>
+          </div>
+          <span class="venue-arrow">›</span>
+        </div>
+        <div class="venue-card" onclick="openModal('lion-venue')">
+          <div class="venue-icon" style="background:#FFF8E1;">🦁</div>
+          <div class="venue-info">
+            <div class="venue-name">The Lion Hotel</div>
+            <div class="venue-detail">Lion Sessions · Free · 23 West Street · 5 min</div>
+          </div>
+          <span class="venue-arrow">›</span>
+        </div>
+        <div class="venue-card" onclick="openModal('square-venue')">
+          <div class="venue-icon" style="background:#E8F5E9;">💃</div>
+          <div class="venue-info">
+            <div class="venue-name">Stage in the Square</div>
+            <div class="venue-detail">Dance & Music · Free · Town Centre · 1 min</div>
+          </div>
+          <span class="venue-arrow">›</span>
+        </div>
+        <div class="venue-card" onclick="openModal('walled-venue')">
+          <div class="venue-icon" style="background:#E3F2FD;">🌿</div>
+          <div class="venue-info">
+            <div class="venue-name">The Walled Garden</div>
+            <div class="venue-detail">Acoustic Music · Free · 7 min walk</div>
+          </div>
+          <span class="venue-arrow">›</span>
+        </div>
+        <div class="venue-card" onclick="openModal('microbrewery-venue')">
+          <div class="venue-icon" style="background:#FBE9E7;">🍺</div>
+          <div class="venue-info">
+            <div class="venue-name">Festival Microbrewery</div>
+            <div class="venue-detail">Festival Ales · Live Music · 4 min</div>
+          </div>
+          <span class="venue-arrow">›</span>
+        </div>
+        <div class="venue-card" onclick="openModal('minster-venue')">
+          <div class="venue-icon" style="background:#EDE7F6;">⛪</div>
+          <div class="venue-info">
+            <div class="venue-name">Wimborne Minster Church</div>
+            <div class="venue-detail">Concerts & Choirs · Town Centre</div>
+          </div>
+          <span class="venue-arrow">›</span>
+        </div>
+      </div>
+      <div style="height:8px;"></div>
+    </div>
+
+    <!-- ======== MY FESTIVAL SCREEN ======== -->
+    <div id="screen-my" class="screen">
+      <div class="my-header">
+        <div class="my-title">My Festival</div>
+        <div class="my-sub">Your personal Saturday plan</div>
+        <div class="my-stats">
+          <div class="my-stat">
+            <div class="my-stat-num">4</div>
+            <div class="my-stat-label">Saved</div>
+          </div>
+          <div class="my-stat">
+            <div class="my-stat-num">3</div>
+            <div class="my-stat-label">Upcoming</div>
+          </div>
+          <div class="my-stat">
+            <div class="my-stat-num">1</div>
+            <div class="my-stat-label">Attended</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's timeline -->
+      <div class="section-head">
+        <span class="section-title">Saturday · 13 June</span>
+      </div>
+
+      <div class="events-list">
+        <div class="saved-event" style="border-left:3px solid var(--muted); opacity:0.7;">
+          <div class="saved-time">
+            <div class="saved-time-num">11</div>
+            <div class="saved-time-label">am</div>
+          </div>
+          <div class="saved-info">
+            <div class="saved-name">Kitty Vernon Singaround</div>
+            <div class="saved-detail">✓ Attended · Lion Hotel · Free</div>
+          </div>
+          <button class="heart-btn saved">♥</button>
+        </div>
+
+        <div class="saved-event" style="border-left:3px solid var(--cat-session);">
+          <div class="saved-time">
+            <div class="saved-time-num">3</div>
+            <div class="saved-time-label">pm</div>
+          </div>
+          <div class="saved-info">
+            <div class="saved-name">Pip Evans · Americana Jam</div>
+            <div class="saved-detail">Lion Hotel · Free · In 45 mins</div>
+          </div>
+          <button class="heart-btn saved">♥</button>
+        </div>
+
+        <div class="saved-event" style="border-left:3px solid var(--cat-procession);">
+          <div class="saved-time">
+            <div class="saved-time-num">5:30</div>
+            <div class="saved-time-label">pm</div>
+          </div>
+          <div class="saved-info">
+            <div class="saved-name">Grand Festival Procession</div>
+            <div class="saved-detail">Town Centre · Don't miss this!</div>
+          </div>
+          <button class="heart-btn saved">♥</button>
+        </div>
+
+        <div class="saved-event" style="border-left:3px solid var(--cat-concert);">
+          <div class="saved-time">
+            <div class="saved-time-num">8</div>
+            <div class="saved-time-label">pm</div>
+          </div>
+          <div class="saved-info">
+            <div class="saved-name">Banter · Headline Concert</div>
+            <div class="saved-detail">Allendale Centre · 🎟 Ticketed</div>
+          </div>
+          <button class="heart-btn saved">♥</button>
+        </div>
+      </div>
+
+      <div class="section-head mt20">
+        <span class="section-title">Reminders</span>
+      </div>
+      <div style="padding:0 20px;">
+        <div class="info-card">
+          <div class="info-item">
+            <div class="info-item-icon" style="background:#FFF8E1;">🔔</div>
+            <div class="info-item-text">
+              <div class="info-item-title">Procession Alert</div>
+              <div class="info-item-sub">Notify me 20 mins before · Sat 5:10pm</div>
+            </div>
+            <span style="font-size:12px; color:var(--forest);">ON</span>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icon" style="background:#E8F5E9;">⏰</div>
+            <div class="info-item-text">
+              <div class="info-item-title">Leave Now Alerts</div>
+              <div class="info-item-sub">Walk time calculated from your location</div>
+            </div>
+            <span style="font-size:12px; color:var(--forest);">ON</span>
+          </div>
+        </div>
+      </div>
+      <div style="height:8px;"></div>
+    </div>
+
+    <!-- ======== INFO SCREEN ======== -->
+    <div id="screen-info" class="screen">
+      <div style="background: linear-gradient(135deg, var(--plum-dark), var(--plum)); padding:24px 20px 28px;">
+        <div style="font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:var(--cream); margin-bottom:4px;">Info & Help</div>
+        <div style="font-size:13px; color:rgba(245,239,224,0.6);">Everything you need for a great festival</div>
+      </div>
+
+      <!-- Getting Here -->
+      <div class="section-head">
+        <span class="section-title">Getting Here</span>
+      </div>
+      <div class="info-section">
+        <div class="info-card">
+          <div class="info-item">
+            <div class="info-item-icon" style="background:#E3F2FD;">🚗</div>
+            <div class="info-item-text">
+              <div class="info-item-title">Travel & Parking</div>
+              <div class="info-item-sub">Park & ride, coach, car parks</div>
+            </div>
+            <span class="info-item-arrow">›</span>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icon" style="background:#E8F5E9;">🚌</div>
+            <div class="info-item-text">
+              <div class="info-item-title">Road Closures</div>
+              <div class="info-item-sub">East Borough closed · Sat 10am–8pm</div>
+            </div>
+            <span class="info-item-arrow">›</span>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icon" style="background:#FBE9E7;">🏨</div>
+            <div class="info-item-text">
+              <div class="info-item-title">Accommodation</div>
+              <div class="info-item-sub">Hotels, B&Bs near Wimborne</div>
+            </div>
+            <span class="info-item-arrow">›</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Festival Info -->
+      <div class="section-head mb0">
+        <span class="section-title">Festival Info</span>
+      </div>
+      <div class="info-section mt8">
+        <div class="info-card">
+          <div class="info-item">
+            <div class="info-item-icon" style="background:#F3E5F5;">🎟</div>
+            <div class="info-item-text">
+              <div class="info-item-title">Tickets</div>
+              <div class="info-item-sub">Headline concerts · Ceilidh · Buy online</div>
+            </div>
+            <span class="info-item-arrow">›</span>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icon" style="background:#FFF8E1;">🔒</div>
+            <div class="info-item-text">
+              <div class="info-item-title">Security & Safety</div>
+              <div class="info-item-sub">Security team · First aid locations</div>
+            </div>
+            <span class="info-item-arrow">›</span>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icon" style="background:#E8F5E9;">♿</div>
+            <div class="info-item-text">
+              <div class="info-item-title">Accessibility</div>
+              <div class="info-item-sub">Step-free routes · Venue notes</div>
+            </div>
+            <span class="info-item-arrow">›</span>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icon" style="background:#E3F2FD;">👨‍👩‍👧</div>
+            <div class="info-item-text">
+              <div class="info-item-title">Families</div>
+              <div class="info-item-sub">Children's programme · Free activities</div>
+            </div>
+            <span class="info-item-arrow">›</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Procession -->
+      <div class="section-head mb0">
+        <span class="section-title">Grand Procession</span>
+      </div>
+      <div style="padding:0 20px; margin-top:8px;">
+        <div style="background:linear-gradient(135deg,var(--forest),var(--forest-light)); border-radius:var(--radius); padding:18px; color:#fff;">
+          <div style="font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-bottom:4px;">Saturday 13 June</div>
+          <div style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:6px;">🥁 Grand Festival Procession</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5; margin-bottom:16px;">The spectacular procession brings together all dance sides, musicians, and the whole town in a colourful parade through Wimborne's streets. Don't miss it!</div>
+          <div style="display:flex; gap:10px;">
+            <div style="background:rgba(255,255,255,0.15); border-radius:8px; padding:10px 14px; flex:1; text-align:center;">
+              <div style="font-size:10px; opacity:0.6; text-transform:uppercase; letter-spacing:1px;">Starts</div>
+              <div style="font-size:18px; font-weight:700; font-family:'Playfair Display',serif;">5:30pm</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.15); border-radius:8px; padding:10px 14px; flex:1; text-align:center;">
+              <div style="font-size:10px; opacity:0.6; text-transform:uppercase; letter-spacing:1px;">Start Point</div>
+              <div style="font-size:14px; font-weight:700;">The Square</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="section-head mt20 mb0">
+        <span class="section-title">Help & Contact</span>
+      </div>
+      <div class="info-section mt8">
+        <div class="info-card">
+          <div class="info-item">
+            <div class="info-item-icon" style="background:#FBE9E7;">📞</div>
+            <div class="info-item-text">
+              <div class="info-item-title">Contact the Festival</div>
+              <div class="info-item-sub">wmff.co.uk/contact-us</div>
+            </div>
+            <span class="info-item-arrow">›</span>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icon" style="background:#E3F2FD;">📘</div>
+            <div class="info-item-text">
+              <div class="info-item-title">Follow on Facebook</div>
+              <div class="info-item-sub">@WimborneFolk · Updates & news</div>
+            </div>
+            <span class="info-item-arrow">›</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donate -->
+      <div class="donate-card mt8">
+        <div class="donate-title">Support the Festival ♫</div>
+        <div class="donate-sub">Wimborne Folk Festival is run entirely by volunteers. Your donation helps keep this beloved community event alive.</div>
+        <button class="donate-btn" onclick="openModal('donate')">Donate via PayPal</button>
+        <div style="margin-top:12px; font-size:11px; color:rgba(245,239,224,0.5);">Or become a Friend of the Festival</div>
+      </div>
+
+      <div style="height:8px;"></div>
+    </div>
+
+  </div><!-- end content-area -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="goToScreen('now')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <span class="nav-label">Now</span>
+    </button>
+    <button class="nav-item" onclick="goToScreen('explore')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <span class="nav-label">Explore</span>
+    </button>
+    <button class="nav-item" onclick="goToScreen('map')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>
+      </svg>
+      <span class="nav-label">Map</span>
+    </button>
+    <button class="nav-item" onclick="goToScreen('my')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      <span class="nav-label">My Plan</span>
+    </button>
+    <button class="nav-item" onclick="goToScreen('info')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+      </svg>
+      <span class="nav-label">Info</span>
+    </button>
+  </nav>
+</div><!-- end #app -->
+
+<!-- EVENT DETAIL MODAL -->
+<div class="modal-overlay" id="eventModal" onclick="closeModalIfBg(event)">
+  <div class="modal-sheet" id="modalSheet">
+    <div class="modal-handle"></div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+  // ---- COUNTDOWN ----
+  function updateCountdown() {
+    const target = new Date('2026-06-12T10:00:00');
+    const now = new Date();
+    const diff = target - now;
+    if (diff <= 0) {
+      document.getElementById('cdDays').textContent = '00';
+      document.getElementById('cdHours').textContent = '00';
+      document.getElementById('cdMins').textContent = '00';
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    document.getElementById('cdDays').textContent = String(days).padStart(2,'0');
+    document.getElementById('cdHours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cdMins').textContent = String(mins).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 30000);
+
+  // ---- ENTER APP ----
+  function enterApp() {
+    const splash = document.getElementById('splash');
+    const app = document.getElementById('app');
+    splash.classList.add('hide');
+    setTimeout(() => {
+      splash.style.display = 'none';
+      app.classList.add('visible');
+    }, 600);
+  }
+
+  // ---- NAV ----
+  function goToScreen(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const screen = document.getElementById('screen-' + name);
+    if (screen) screen.classList.add('active');
+    const nav = document.querySelectorAll('.nav-item');
+    const map = {now:0, explore:1, map:2, my:3, info:4};
+    if (map[name] !== undefined) nav[map[name]].classList.add('active');
+    document.querySelector('.content-area').scrollTop = 0;
+  }
+
+  // ---- MODALS ----
+  const modals = {
+    banter: {
+      emoji: '🎸', gradient: 'linear-gradient(135deg,#4A1942,#8B3A7A)',
+      cat: 'var(--cat-concert)',
+      title: 'Banter', artist: 'Nina Zella · Simon Care · Tim Walker · Mark Jolley',
+      time: 'Friday 8pm – 10pm', venue: 'Allendale Centre',
+      badge: '🎟 Ticketed', walk: '3 min walk',
+      desc: 'Described as "The future of Folk", Banter take English traditional music to the next level with their iconic interpretations of classic songs and dance tunes. Following in the creative footsteps of Steeleye Span and La Bottine Souriante, their fourth album "Heroes" has received rave reviews from around the globe.',
+    },
+    kitty: {
+      emoji: '🎤', gradient: 'linear-gradient(135deg,#6B4400,#C9952A)',
+      cat: 'var(--cat-session)',
+      title: 'Kitty Vernon Singaround', artist: 'Hosted by Kitty Vernon',
+      time: 'Saturday 11am – 2pm', venue: 'The Lion Hotel',
+      badge: '✅ Free entry', walk: '5 min walk',
+      desc: 'Kitty has been hosting song sessions at folk festivals around the country for many years. She has a reputation for running welcoming, well-managed and entertaining singarounds. Anyone who wants to will have an opportunity to lead or perform a song. All welcome!',
+    },
+    pip: {
+      emoji: '🪕', gradient: 'linear-gradient(135deg,#3A4A1F,#6A8A3A)',
+      cat: 'var(--cat-session)',
+      title: 'Pip Evans · Americana Jam', artist: 'Hosted by Pip Evans',
+      time: 'Saturday 3pm – 6pm', venue: 'The Lion Hotel',
+      badge: '✅ Free entry', walk: '5 min walk',
+      desc: 'Americana roots traditions jam with Pip Evans — including country, folk, bluegrass, blues, and western swing. All standards of acoustic string instruments are welcome. Bring your instrument, bring your enthusiasm!',
+    },
+    gidderskins: {
+      emoji: '🌿', gradient: 'linear-gradient(135deg,#2D5A27,#4A7A42)',
+      cat: 'var(--cat-dance)',
+      title: 'Gidderskins', artist: 'Border Morris · Hereford',
+      time: 'Saturday & Sunday · Various times', venue: 'Various Town Centre Venues',
+      badge: '✅ Free entry', walk: 'Town Centre',
+      desc: 'Gidderskins are an exciting and innovative Border Morris side from Hereford. Performing Traditional English Folk Dances with a modern twist, they offer both original and existing dances, with an aesthetic focus on the natural world and folklore.',
+    },
+    alton: {
+      emoji: '🔴', gradient: 'linear-gradient(135deg,#6B0000,#C94040)',
+      cat: 'var(--cat-dance)',
+      title: 'Alton Morris', artist: 'Border Morris · Alton, Hampshire',
+      time: 'All weekend · Various', venue: 'Town Centre',
+      badge: '✅ Free entry', walk: 'Town Centre',
+      desc: 'Alton Morris is a mixed Border side based in Alton, Hampshire. Known for their lively dancing and colourful red and green tatters that match their red and green faces. This year they are celebrating their 35th anniversary of performing Border!',
+    },
+    exeter: {
+      emoji: '💃', gradient: 'linear-gradient(135deg,#1A3A6B,#2E6BAA)',
+      cat: 'var(--cat-dance)',
+      title: 'Exeter Morris', artist: 'Cotswold Morris · Est. 1951',
+      time: 'All weekend', venue: 'Various Town Venues',
+      badge: '✅ Free entry', walk: 'Town Centre',
+      desc: 'Exeter Morris was founded in 1951 and is Devon\'s oldest Morris side. In their distinctive green waistcoats, they bring Cotswold Morris with a repertoire spanning 40 traditional dances. Since 2022 they\'ve been Exeter\'s first mixed Morris side.',
+    },
+    mk: {
+      emoji: '🎻', gradient: 'linear-gradient(135deg,#5A3A00,#C9952A)',
+      cat: 'var(--cat-concert)',
+      title: 'Mitchell & Kirby', artist: 'Rupert Kirby · David Mitchell',
+      time: 'Friday Evening', venue: 'Allendale Centre',
+      badge: '🎟 Ticketed', walk: '3 min walk',
+      desc: 'Mitchell & Kirby seamlessly match and weave the traditional with their own original compositions, to create tune sets which are great to listen and dance to. Multi-instrumentalists using the classic combination of fiddle and guitar.',
+    },
+    walled: {
+      emoji: '🌿', gradient: 'linear-gradient(135deg,#1A4A3A,#2A7A5A)',
+      cat: 'var(--cat-music)',
+      title: 'Walled Garden Sessions', artist: 'Acoustic performances',
+      time: 'All weekend · From 2:30pm', venue: 'The Walled Garden',
+      badge: '✅ Free entry', walk: '7 min walk',
+      desc: 'The beautiful Walled Garden hosts intimate acoustic performances throughout the weekend. A perfect retreat from the bustle of the town centre — bring a blanket, find a spot, and enjoy live folk music in a stunning historic setting.',
+    },
+    'friday-session': {
+      emoji: '🎵', gradient: 'linear-gradient(135deg,#3A2A5A,#6A4A9A)',
+      cat: 'var(--cat-session)',
+      title: 'Friday Open Session', artist: 'Hosted by Andrew Helson',
+      time: 'Friday from 7:30pm', venue: 'The Lion Hotel, 23 West Street',
+      badge: '✅ Free entry', walk: '5 min walk',
+      desc: 'An open session with songs and tunes from across the Folkosphere. Bring your instruments, your voice and your enthusiasm! All welcome at the Lion Hotel — one of Wimborne\'s most welcoming folk venues.',
+    },
+    donate: {
+      emoji: '♥', gradient: 'linear-gradient(135deg,var(--plum-dark),var(--plum))',
+      cat: 'var(--plum)',
+      title: 'Support the Festival', artist: 'Not-for-profit · Volunteer run',
+      time: 'Donate any time', venue: 'Wimborne Folk Festival',
+      badge: '💛 Charity', walk: 'www.wmff.co.uk',
+      desc: 'Wimborne Folk Festival is a not-for-profit organisation run entirely by dedicated volunteers. Running the event incurs significant costs and donations of any size are gratefully received. You can also become a Friend of the Festival for year-round support.',
+    },
+    'anon-morris': {
+      emoji: '💜', gradient: 'linear-gradient(135deg,#3A1A5A,#7A3A9A)',
+      cat: 'var(--cat-dance)',
+      title: 'Anonymous Morris', artist: 'Border Morris · Parkstone, Poole',
+      time: 'Saturday · Various', venue: 'The Square & Town Centre',
+      badge: '✅ Free entry', walk: 'Town Centre',
+      desc: 'Anonymous Morris are an energetic Border Morris team who dance in purple tatter jackets and black top hats. They practice in Parkstone, Poole and always welcome new dancers and musicians.',
+    },
+    // Venue modals
+    'allendale-venue': {
+      emoji: '🎸', gradient: 'linear-gradient(135deg,#4A1942,#8B3A7A)',
+      cat: 'var(--cat-concert)',
+      title: 'Allendale Centre', artist: 'Headline Concert Venue',
+      time: 'Evening concerts · Check schedule', venue: 'Wimborne Minster',
+      badge: '🎟 Ticketed Events', walk: '3 min from The Square',
+      desc: 'The Allendale Centre is the main venue for Festival\'s headline concerts. This atmospheric venue hosts the biggest acts of the festival weekend. Book tickets in advance — these events sell out!',
+    },
+    'lion-venue': {
+      emoji: '🦁', gradient: 'linear-gradient(135deg,#4A3500,#9A7000)',
+      cat: 'var(--cat-session)',
+      title: 'The Lion Hotel', artist: 'Lion Sessions Venue',
+      time: 'Sessions Fri–Sun', venue: '23 West Street, Wimborne',
+      badge: '✅ Free sessions', walk: '5 min from The Square',
+      desc: 'The Lion Hotel is the home of the beloved Lion Sessions — participatory folk sessions hosted by some of the finest session leaders in the country. Bring an instrument, your voice, or just come to listen. Newcomers always welcome.',
+    },
+    'square-venue': {
+      emoji: '💃', gradient: 'linear-gradient(135deg,#2D5A27,#4A7A42)',
+      cat: 'var(--cat-dance)',
+      title: 'Stage in the Square', artist: 'Outdoor Dance & Music Stage',
+      time: 'All day Sat & Sun', venue: 'The Square, Town Centre',
+      badge: '✅ Free & outdoor', walk: 'Town Centre',
+      desc: 'The heart of the festival. The Square is where morris sides perform, bands play, and the whole town comes together. Free, outdoor, and buzzing all weekend. Perfect for families.',
+    },
+    'walled-venue': {
+      emoji: '🌿', gradient: 'linear-gradient(135deg,#1A4A3A,#2A7A5A)',
+      cat: 'var(--cat-music)',
+      title: 'The Walled Garden', artist: 'Acoustic Music Garden',
+      time: 'Afternoons · Sat & Sun', venue: 'Wimborne',
+      badge: '✅ Free entry', walk: '7 min walk from centre',
+      desc: 'A tranquil walled garden hosting intimate acoustic performances. One of the festival\'s hidden gems — step away from the busy town centre to enjoy beautiful music in a historic garden setting.',
+    },
+    'microbrewery-venue': {
+      emoji: '🍺', gradient: 'linear-gradient(135deg,#4A2A00,#9A5A00)',
+      cat: 'var(--cat-food)',
+      title: 'Festival Microbrewery', artist: 'Festival Ales & Live Music',
+      time: 'Open all festival weekend', venue: 'Near Town Centre',
+      badge: '🍺 Food & Drink', walk: '4 min walk',
+      desc: 'The festival microbrewery serves specially brewed ales alongside food and live music. A favourite gathering spot for festival-goers. Try the Festival ale!',
+    },
+    'minster-venue': {
+      emoji: '⛪', gradient: 'linear-gradient(135deg,#3A2A5A,#6A5A8A)',
+      cat: '#5C5278',
+      title: 'Wimborne Minster', artist: 'Historic Church & Concert Venue',
+      time: 'Concert times TBC', venue: 'The Square, Wimborne',
+      badge: 'Concerts & Choirs', walk: 'Town Centre',
+      desc: 'The magnificent Wimborne Minster church provides a stunning backdrop to the festival and hosts concerts and choral performances. One of the finest Norman churches in the south of England.',
+    },
+  };
+
+  function openModal(id) {
+    const m = modals[id];
+    if (!m) return;
+    const content = document.getElementById('modalContent');
+    content.innerHTML = `
+      <div class="modal-img" style="background:${m.gradient};">${m.emoji}</div>
+      <div class="modal-cat-bar" style="background:${m.cat};"></div>
+      <div class="modal-body">
+        <div class="modal-title">${m.title}</div>
+        <div class="modal-artist">${m.artist}</div>
+        <div class="modal-meta-grid">
+          <div class="modal-meta-item">
+            <div class="modal-meta-label">Time</div>
+            <div class="modal-meta-val">${m.time}</div>
+          </div>
+          <div class="modal-meta-item">
+            <div class="modal-meta-label">Venue</div>
+            <div class="modal-meta-val">${m.venue}</div>
+          </div>
+          <div class="modal-meta-item">
+            <div class="modal-meta-label">Entry</div>
+            <div class="modal-meta-val">${m.badge}</div>
+          </div>
+          <div class="modal-meta-item">
+            <div class="modal-meta-label">Distance</div>
+            <div class="modal-meta-val">${m.walk}</div>
+          </div>
+        </div>
+        <div class="modal-desc">${m.desc}</div>
+        <div class="modal-actions">
+          <button class="modal-btn modal-btn-primary" onclick="saveEvent('${id}')">♥ Save to My Plan</button>
+          <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Close</button>
+        </div>
+      </div>`;
+    document.getElementById('eventModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('eventModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeModalIfBg(e) {
+    if (e.target === document.getElementById('eventModal')) closeModal();
+  }
+
+  function saveEvent(id) {
+    const m = modals[id];
+    if (!m) return;
+    const btn = document.querySelector('.modal-actions .modal-btn-primary');
+    btn.textContent = '✓ Saved!';
+    btn.style.background = 'var(--forest)';
+    setTimeout(() => closeModal(), 800);
+  }
+
+  function filterCategory(cat) {
+    goToScreen('explore');
+  }
+</script>
+</body>
+</html>
